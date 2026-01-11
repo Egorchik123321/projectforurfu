@@ -1,90 +1,87 @@
-# projectforurfu
-ContentHub — Умный агрегатор персонального контента
-ContentHub — это интеллектуальная система для сбора, организации и рекомендации контента. Приложение автоматически анализирует статьи, видео и книги, извлекает ключевые темы и предлагает персонализированные рекомендации на основе ваших интересов.
+ContentHub — Интеллектуальный агрегатор персонального контента
+ContentHub — это умная система для сбора, анализа и рекомендации образовательного контента. Сервис автоматически парсит статьи, видео и книги, определяет тематику с помощью NLP-анализа и предлагает персонализированные рекомендации на основе ваших интересов. Идеален для разработчиков, исследователей и всех, кто постоянно потребляет профессиональный контент.
 
-Ключевые особенности
-  Умная агрегация
-    Автоматический парсинг — загрузите ссылку, система сама извлечет заголовок, описание и превью
-      NLP-анализ — автоматическое определение тематики и ключевых слов с помощью SpaCy
-      Категоризация — интеллектуальная группировка контента по темам без вашего участия
-      Дубликаты — система определяет похожий контент и предлагает объединение
+Ссылка на рабочий проект: https://ваш-логин.pythonanywhere.com
 
-Персонализированные рекомендации
-  Коллаборативная фильтрация — "пользователи с похожими интересами также читали..."
-  Контентная фильтрация — рекомендации на основе тегов и категорий вашего контента
-  Адаптивный алгоритм — система учится на ваших действиях (просмотры, сохранения, оценки)
-  Тренды — показывает популярный контент в ваших категориях интересов
+Технологии
+Python 3.11
 
-Интеллектуальная организация
-  Авто-тегирование — генерация релевантных тегов с учетом контекста
-  Кластеризация — группировка похожего контента в коллекции
-  Визуализация интересов — график ваших тематических предпочтений
-  Аналитика времени — сколько времени вы тратите на каждый тип контента
+Django 5.0
 
-  
-Быстрый старт
+Django REST Framework 3.15
 
-### Предварительные требования
-- Python 3.11+
-- PostgreSQL 13+
-- 4 ГБ оперативной памяти (для NLP моделей)
-- Git
+PostgreSQL 15
 
-### Установка за 5 минут
+SpaCy 3.7 (NLP-обработка)
 
-Клонируйте и настройте проект:
-bash:
-  git clone https://github.com/yourusername/contenthub.git
-  cd contenthub
+Celery 5.3 + Redis 7.0 (фоновые задачи)
 
-Создайте виртуальное окружение
-  python -m venv venv
-  source venv/bin/activate  # Windows: venv\Scripts\activate
+Bootstrap 5 (интерфейс)
 
-Установите зависимости
-  pip install -r requirements.txt
+Chart.js (визуализация аналитики)
 
-Настройте базу данных и окружение:
+Скриншоты
+Отсутствуют, будут добавлены после начала работ. Дедлайн проекта 20.01.2026.
 
-  # Создайте файл .env
-  cat > .env << EOF
-  SECRET_KEY=ваш-секретный-ключ-сгенерируйте-новый
-  DEBUG=True
-  DB_NAME=contenthub
-  DB_USER=postgres
-  DB_PASSWORD=ваш-пароль
-  DB_HOST=localhost
-  DB_PORT=5432
+Как запустить проект локально
+1. Клонируйте репозиторий:
+bash
+git clone https://github.com/ваш-юзернейм/contenthub.git
+cd contenthub
+2. Создайте и активируйте виртуальное окружение:
+bash
+# Для Linux/Mac:
+python -m venv venv
+source venv/bin/activate
 
-  # NLP настройки
-  SPACY_MODEL=ru_core_news_sm  # или en_core_web_sm
-  ENABLE_AI_ANALYSIS=True
+# Для Windows:
+python -m venv venv
+venv\Scripts\activate
+3. Установите зависимости:
+bash
+pip install -r requirements.txt
+4. Настройте базу данных и переменные окружения:
+bash
+# Создайте файл .env в корне проекта:
+echo "SECRET_KEY=ваш-секретный-ключ-сгенерируйте-через-django-shell
+DEBUG=True
+DB_NAME=contenthub
+DB_USER=ваш-пользователь
+DB_PASSWORD=ваш-пароль
+DB_HOST=localhost
+DB_PORT=5432
+REDIS_URL=redis://localhost:6379/0
+SPACY_MODEL=ru_core_news_sm" > .env
+5. Создайте базу данных PostgreSQL:
+bash
+sudo -u postgres psql -c "CREATE DATABASE contenthub;"
+sudo -u postgres psql -c "CREATE USER ваш_пользователь WITH PASSWORD 'ваш_пароль';"
+sudo -u postgres psql -c "ALTER ROLE ваш_пользователь SET client_encoding TO 'utf8';"
+sudo -u postgres psql -c "ALTER ROLE ваш_пользователь SET default_transaction_isolation TO 'read committed';"
+sudo -u postgres psql -c "ALTER ROLE ваш_пользователь SET timezone TO 'UTC';"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE contenthub TO ваш_пользователь;"
+6. Загрузите NLP-модели:
+bash
+python -m spacy download ru_core_news_sm
+python -m spacy download en_core_web_sm
+7. Выполните миграции:
+bash
+python manage.py migrate
+8. Создайте суперпользователя:
+bash
+python manage.py createsuperuser
+9. Запустите Redis (для фоновых задач):
+bash
+# Для Ubuntu/Debian:
+sudo systemctl start redis
 
-  # Парсинг
-  USER_AGENT=ContentHubBot/1.0 (+https://ваш-сайт/bot)
-  EOF
-  Инициализируйте базу и NLP модели:
+# Для Mac:
+brew services start redis
 
-
-  # Создайте базу данных
-  sudo -u postgres createdb contenthub
-  
-  # Примените миграции
-  python manage.py migrate
-  
-  # Загрузите NLP модель (автоматически при первом запуске)
-  python manage.py download_nlp_models
-  
-  # Создайте администратора
-  python manage.py createsuperuser
-  Запустите сервер:
-
-
-  # Запуск в режиме разработки
-  python manage.py runserver
-
-  # Или с обработкой фоновых задач (рекомендуется)
-  celery -A config worker -l info &  # В фоне
-  python manage.py runserver
-
-Откройте в браузере: http://localhost:8000
+# Для Windows - установите Redis из Microsoft Archive
+10. Запустите Celery worker (в отдельном терминале):
+bash
+celery -A config worker -l info
+11. Запустите сервер разработки:
+bash
+python manage.py runserver
