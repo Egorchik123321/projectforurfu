@@ -45,7 +45,7 @@ bash:
   pip install -r requirements.txt
 
 Настройте базу данных и окружение:
-bash
+
   # Создайте файл .env
   cat > .env << EOF
   SECRET_KEY=ваш-секретный-ключ-сгенерируйте-новый
@@ -65,7 +65,7 @@ bash
   EOF
   Инициализируйте базу и NLP модели:
 
-bash
+
   # Создайте базу данных
   sudo -u postgres createdb contenthub
   
@@ -79,7 +79,7 @@ bash
   python manage.py createsuperuser
   Запустите сервер:
 
-bash
+
   # Запуск в режиме разработки
   python manage.py runserver
 
