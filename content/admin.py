@@ -1,6 +1,6 @@
 from django.contrib import admin # pyright: ignore[reportMissingModuleSource]
 from .models import Category, ContentItem, Recommendation
-from taggit.models import Tag # pyright: ignore[reportMissingImports]
+#from taggit.models import Tag # pyright: ignore[reportMissingImports]
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -26,4 +26,4 @@ class RecommendationAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 # Регистрируем Tag из taggit для управления в админке
-admin.site.register(Tag)
+#admin.site.register(Tag)

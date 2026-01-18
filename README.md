@@ -69,3 +69,167 @@ ContentHub — это умная система для сбора, органи�
 ```bash
 git clone https://github.com/Egorchik123321/projectforurfu.git
 cd projectforurfu
+
+# Windows
+python -m venv .venv
+.venv\Scripts\activate
+
+# Linux/Mac
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+# Создайте файл .env в корне проекта:
+echo "SECRET_KEY=ваш-секретный-ключ
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1" > .env
+
+# Для генерации SECRET_KEY:
+python -c "from django.core.management.utils import get_random_secret_key; print(f'SECRET_KEY={get_random_secret_key()}')"
+# Примените миграции
+python manage.py migrate
+
+# Создайте суперпользователя
+python manage.py createsuperuser
+
+# Заполните базу тестовыми данными
+python manage.py seed_data
+
+python manage.py runserver
+Откройте http://localhost:8000
+🌐 Развертывание на PythonAnywhere
+Шаг 1: Настройка аккаунта
+Создайте бесплатный аккаунт на PythonAnywhere
+
+Подтвердите email
+
+Шаг 2: Загрузка проекта
+bash
+# В консоли PythonAnywhere
+git clone https://github.com/Egorchik123321/projectforurfu.git
+Шаг 3: Настройка virtualenv
+bash
+cd projectforurfu
+python3.10 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+Шаг 4: Настройка базы данных
+bash
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py seed_data
+python manage.py collectstatic --noinput
+Шаг 5: Настройка веб-приложения
+В панели PythonAnywhere перейдите в Web
+
+Нажмите Add a new web app
+
+Выберите Manual configuration
+
+Укажите путь к virtualenv: /home/Egor06/projectforurfu/venv
+
+Отредактируйте WSGI файл согласно документации
+
+Шаг 6: Включение продакшн-режима
+В project/settings.py на PythonAnywhere:
+
+python
+DEBUG = False
+ALLOWED_HOSTS = ['Egor06.pythonanywhere.com']
+📊 API Документация
+Базовый URL
+text
+http://Egor06.pythonanywhere.com/api/
+Основные endpoints
+Контент
+text
+GET    /api/contents/           - Список всего контента
+POST   /api/contents/           - Добавить новый контент
+GET    /api/contents/{id}/      - Детали контента
+PUT    /api/contents/{id}/      - Обновить контент
+DELETE /api/contents/{id}/      - Удалить контент
+GET    /api/contents/{id}/similar/ - Похожий контент
+Категории
+text
+GET    /api/categories/         - Список категорий
+GET    /api/categories/{slug}/  - Детали категории
+GET    /api/categories/{slug}/contents/ - Контент в категории
+Рекомендации
+text
+GET    /api/recommendations/for_me/ - Персональные рекомендации
+POST   /api/recommendations/       - Создать рекомендацию
+Утилиты
+text
+POST   /api/parse/              - Парсить контент по URL
+GET    /api/analytics/          - Аналитика данных
+GET    /api/visualizations/     - Графики и визуализации
+Примеры запросов
+bash
+# Получить все категории
+curl -X GET http://Egor06.pythonanywhere.com/api/categories/
+
+# Поиск контента по тегу
+curl -X GET "http://Egor06.pythonanywhere.com/api/contents/?search=python"
+
+# Парсинг статьи по URL
+curl -X POST http://Egor06.pythonanywhere.com/api/parse/ \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://docs.djangoproject.com/"}'
+🧪 Тестирование
+Проект включает комплексные тесты:
+
+bash
+# Запуск всех тестов
+python manage.py test
+
+# Запуск с покрытием кода
+pip install coverage
+coverage run manage.py test
+coverage report
+coverage html  # Генерирует HTML отчет в htmlcov/
+Структура тестов
+Модели: Тестирование CRUD операций
+
+API: Тестирование endpoints и сериализаторов
+
+Forms: Тестирование валидации форм
+
+Views: Тестирование представлений и шаблонов
+
+📁 Структура проекта
+text
+projectforurfu/
+├── content/                    # Основное приложение
+│   ├── migrations/            # Миграции базы данных
+│   ├── management/commands/   # Кастомные команды Django
+│   ├── __init__.py
+│   ├── admin.py              # Админ-панель
+│   ├── api_views.py          # API представления
+│   ├── apps.py
+│   ├── forms.py              # Формы Django
+│   ├── models.py             # Модели данных
+│   ├── recommendation_engine.py # Движок рекомендаций
+│   ├── serializers.py        # Сериализаторы DRF
+│   ├── services.py           # Внешние сервисы
+│   ├── tests.py              # Тесты
+│   ├── urls.py               # URL маршруты
+│   ├── views.py              # Веб-представления
+│   └── visualizations.py     # Визуализации данных
+├── project/                  # Настройки проекта
+│   ├── __init__.py
+│   ├── asgi.py
+│   ├── settings.py          # Основные настройки
+│   ├── urls.py              # Главные URL
+│   └── wsgi.py
+├── templates/               # HTML шаблоны
+│   ├── base.html           # Базовый шаблон
+│   └── content/            # Шаблоны приложения
+├── static/                  # Статические файлы
+├── .env.example            # Пример переменных окружения
+├── .gitignore              # Git ignore файл
+├── db.sqlite3              # База данных (не коммитить!)
+├── manage.py              # Django CLI
+├── README.md              # Документация
+├── requirements.txt       # Зависимости
+└── TZ.md                 # Техническое задание
