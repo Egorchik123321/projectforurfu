@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
+from decouple import config # pyright: ignore[reportMissingImports]
+
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-pudwdcynda7k^fkp+s55i=%0kteub7n@26vouu+fe9dnb+x9^l')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,6 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'taggit',
+    'rest_framework',
+    'content',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +125,14 @@ STATIC_URL = 'static/'
 import os
 # Эта папка создастся автоматически при команде collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+TAGGIT_CASE_INSENSITIVE = True
+
+# Настройки REST Framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
