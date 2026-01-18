@@ -6,7 +6,7 @@ from django.conf.urls.static import static # pyright: ignore[reportMissingModule
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('content.urls')),
-    path('api/', include('content.api_urls')),  # Добавьте эту строку
+    path('api/', include('content.api_urls')),  
 ]
 
 if settings.DEBUG:
