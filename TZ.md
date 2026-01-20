@@ -1,783 +1,392 @@
-Техническое задание на разработку ContentHub
 1. Общие сведения
 1.1 Наименование проекта
-ContentHub — Веб-сервис интеллектуальной агрегации образовательного контента для IT-специалистов с NLP-анализом и рекомендательной системой
+ContentHub — Веб-сервис для агрегации и организации персонального контента с рекомендательной системой
 
 1.2 Цель проекта
-Создать платформу для автоматического сбора, анализа и рекомендации профессионального контента (статьи, видео, книги) с использованием машинного обучения для классификации и персонализации.
+Создать простую и функциональную платформу для сохранения, организации и поиска образовательного контента (статьи, видео, книги) с базовой системой рекомендаций на основе тегов.
 
 1.3 Критерии успеха
-Автоматическая обработка 95% передаваемых ссылок
-
-Точность категоризации контента ≥ 85%
-
-Время генерации рекомендаций < 500 мс
-
-Поддержка 1000+ активных пользователей
+Рабочий веб-интерфейс с адаптивным дизайном
+Функциональная система добавления и фильтрации контента
+Работающая рекомендательная система
+Успешный деплой на PythonAnywhere
+Наполненная база данных для демонстрации
 
 2. Требования к системе
 2.1 Функциональные требования
 2.1.1 Пользовательские роли
 Анонимный пользователь:
 
-Просмотр публичных коллекций
-
-Регистрация и вход
-
+Просмотр публичного контента
+Использование поиска и фильтров
 Зарегистрированный пользователь:
-
-Управление личным контентом (CRUD)
-
-Автоматический парсинг ссылок
-
-NLP-анализ добавленного контента
-
-Персонализированные рекомендации
-
-Создание публичных/приватных коллекций
-
-Подписка на других пользователей
-
-Экспорт данных
+Добавление нового контента (вручную и через парсинг URL)
+Управление своим контентом (CRUD операции)
+Получение персонализированных рекомендаций
+Использование системы тегов для организации
 
 Администратор:
 
-Модерация пользовательского контента
+Полный доступ к админ-панели Django
+Управление категориями и контентом
+Просмотр статистики
 
-Управление системными настройками
+2.1.2 Основные функции
+Управление контентом:
 
-Просмотр аналитики платформы
+Добавление статей, видео, книг, подкастов, курсов
+Автоматический парсинг метаданных по URL
+Ручное тегирование
+Фильтрация по типу, категориям, тегам
 
-Управление NLP-моделями
+Система рекомендаций:
 
-2.1.2 Интеллектуальная обработка контента
-Автоматический парсинг:
+Рекомендации на основе общих тегов
+Простой алгоритм коллаборативной фильтрации
+Объяснение рекомендаций
 
-Извлечение Open Graph метаданных
+Аналитика:
 
-Определение типа контента (статья/видео/книга)
-
-Получение превью-изображений
-
-Обработка ошибок и таймаутов
-
-NLP-анализ:
-
-Извлечение ключевых сущностей (технологии, языки, фреймворки)
-
-Автоматическая тегизация
-
-Определение языковой принадлежности
-
-Классификация по темам (Backend/Frontend/Data Science/DevOps)
-
-Рекомендательная система:
-
-Контентная фильтрация (по тегам и категориям)
-
-Коллаборативная фильтрация (по действиям похожих пользователей)
-
-Гибридный алгоритм с весовыми коэффициентами
-
-Механизм разнообразия рекомендаций
-
-2.1.3 Аналитика и отчетность
-Визуализация интересов пользователя
-
-Статистика по потреблению контента
-
-Отслеживание прогресса обучения
-
-Экспорт данных в CSV/JSON
+Базовая статистика по контенту
+Визуализация распределения типов контента
+Динамика добавления контента
 
 2.2 Нефункциональные требования
-Производительность: Время отклика API < 200 мс, рендеринг страниц < 1 с
+Производительность: Время загрузки страниц < 2 сек
+Надежность: Базовые обработки ошибок
+Безопасность: Защита от CSRF, безопасное хранение настроек
+Юзабилити: Адаптивный дизайн на Bootstrap 5
 
-Масштабируемость: Поддержка до 10,000 пользователей
-
-Надежность: Доступность 99.5%, резервное копирование ежедневно
-
-Безопасность: HTTPS, защита от XSS/CSRF, валидация входных данных
-
-Юзабилити: Mobile-first дизайн, progressive enhancement
 3. Архитектура системы
 3.1 Технологический стек
 text
 Backend:
-  • Django 5.0 + Django REST Framework 3.15
-  • Python 3.11
-  • PostgreSQL 15 с расширениями:
-    - pg_trgm для триграммного поиска
-    - pgvector для векторных операций (опционально)
-  • Redis 7.0 для кэширования и очередей
-  • Celery 5.3 для фоновых задач
+  • Django 4.2
+  • Django REST Framework 3.14
+  • SQLite 3 / PostgreSQL (готово к миграции)
+  • Django Taggit для управления тегами
 
-AI/ML компоненты:
-  • SpaCy 3.7 для NLP анализа
-  • scikit-learn 1.3 для кластеризации
-  • NLTK/TextBlob для текстовой обработки
-  • SentenceTransformers для векторных представлений
+Frontend:
+  • Django Templates
+  • Bootstrap 5.1
+  • Plotly.js для визуализации
+  • JavaScript (ES6+)
 
-Фронтенд:
-  • Django Templates + HTMX для динамики
-  • Bootstrap 5 для стилей
-  • Chart.js для визуализации
-  • Alpine.js для интерактивных компонентов
+Data Science компоненты:
+  • Pandas для анализа данных
+  • Plotly для создания графиков
+  • Requests для работы с внешними API
 
 Инфраструктура:
-  • Docker + Docker Compose
-  • Nginx как reverse proxy
-  • Gunicorn/Uvicorn как ASGI сервер
-  • GitHub Actions для CI/CD
+  • PythonAnywhere для хостинга
+  • Git для контроля версий
+
+
 3.2 Модели данных
-3.2.1 Пользователь (CustomUser)
+
+3.2.1 Категория (Category)
 python
-class CustomUser(AbstractUser):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email = models.EmailField(unique=True, verbose_name="Email")
-    username = models.CharField(max_length=150, unique=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    bio = models.TextField(max_length=500, blank=True, verbose_name="О себе")
-    job_title = models.CharField(max_length=100, blank=True, verbose_name="Должность")
-    company = models.CharField(max_length=100, blank=True, verbose_name="Компания")
-    
-    # Настройки пользователя
-    language_preference = models.CharField(
-        max_length=2, 
-        choices=[('ru', 'Русский'), ('en', 'English')],
-        default='ru'
-    )
-    receive_recommendations = models.BooleanField(default=True)
-    is_content_public = models.BooleanField(default=False)
-    
-    # Статистика
-    content_count = models.IntegerField(default=0)
-    last_active = models.DateTimeField(auto_now=True)
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
-        indexes = [
-            models.Index(fields=['email']),
-            models.Index(fields=['last_active']),
-        ]
+class Category(models.Model):
+    """Модель для категорий контента"""
+    name = models.CharField('Название', max_length=100, unique=True)
+    slug = models.SlugField('URL', max_length=100, unique=True)
+    description = models.TextField('Описание', blank=True)
+
 3.2.2 Контент (ContentItem)
 python
 class ContentItem(models.Model):
+    """Основная модель для хранения контента"""
     CONTENT_TYPES = [
-        ('article', '📝 Статья'),
-        ('video', '🎥 Видео'),
-        ('book', '📚 Книга'),
-        ('course', '🎓 Курс'),
-        ('podcast', '🎧 Подкаст'),
-        ('tutorial', '🛠️ Руководство'),
-        ('research', '🔬 Исследование'),
-        ('other', '📦 Другое'),
+        ('article', 'Статья'),
+        ('video', 'Видео'),
+        ('book', 'Книга'),
+        ('podcast', 'Подкаст'),
+        ('course', 'Курс'),
     ]
     
     STATUS_CHOICES = [
         ('new', 'Новый'),
-        ('in_progress', 'В процессе'),
+        ('in_progress', 'Читаю/Смотрю'),
         ('completed', 'Завершено'),
         ('postponed', 'Отложено'),
-        ('archived', 'В архиве'),
     ]
     
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(
-        CustomUser, 
-        on_delete=models.CASCADE,
-        related_name='content_items',
-        verbose_name="Владелец"
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField('Заголовок', max_length=200)
+    url = models.URLField('Ссылка', max_length=500, blank=True)
+    description = models.TextField('Описание', blank=True)
+    content_type = models.CharField('Тип контента', max_length=20, choices=CONTENT_TYPES)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    status = models.CharField('Статус', max_length=20, choices=STATUS_CHOICES, default='new')
     
-    # Основные данные
-    url = models.URLField(max_length=2000, verbose_name="URL")
-    title = models.CharField(max_length=500, verbose_name="Заголовок")
-    description = models.TextField(blank=True, verbose_name="Описание")
-    content_type = models.CharField(
-        max_length=20, 
-        choices=CONTENT_TYPES,
-        default='article',
-        verbose_name="Тип контента"
-    )
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default='new',
-        verbose_name="Статус"
-    )
-    
-    # Автоматически извлеченные данные
-    domain = models.CharField(max_length=255, blank=True, verbose_name="Домен")
-    preview_image = models.URLField(max_length=2000, blank=True, verbose_name="Превью")
-    estimated_read_time = models.IntegerField(null=True, blank=True, verbose_name="Время чтения (мин)")
-    
-    # NLP анализ
-    extracted_text = models.TextField(blank=True, verbose_name="Извлеченный текст")
-    language = models.CharField(max_length=10, blank=True, verbose_name="Язык")
-    entities = models.JSONField(default=dict, verbose_name="Извлеченные сущности")
-    sentiment_score = models.FloatField(null=True, blank=True, verbose_name="Тональность")
-    complexity_score = models.FloatField(null=True, blank=True, verbose_name="Сложность")
-    
-    # Системные поля
-    is_public = models.BooleanField(default=False, verbose_name="Публичный доступ")
-    is_parsed = models.BooleanField(default=False, verbose_name="Обработан")
-    parsing_attempts = models.IntegerField(default=0, verbose_name="Попыток парсинга")
+    # Теги через django-taggit
+    tags = TaggableManager()
     
     # Временные метки
-    added_at = models.DateTimeField(auto_now_add=True, verbose_name="Добавлено")
-    started_at = models.DateTimeField(null=True, blank=True, verbose_name="Начало чтения")
-    completed_at = models.DateTimeField(null=True, blank=True, verbose_name="Завершено")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлено")
-    
-    class Meta:
-        verbose_name = "Контент"
-        verbose_name_plural = "Контент"
-        ordering = ['-added_at']
-        indexes = [
-            models.Index(fields=['user', 'status']),
-            models.Index(fields=['content_type']),
-            models.Index(fields=['added_at']),
-            models.Index(fields=['domain']),
-        ]
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'url'],
-                name='unique_user_url'
-            )
-        ]
-3.2.3 Тег (Tag) - ManyToMany через промежуточную модель
-python
-class Tag(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, unique=True, verbose_name="Название")
-    slug = models.SlugField(max_length=100, unique=True, verbose_name="Slug")
-    description = models.TextField(blank=True, verbose_name="Описание")
-    
-    # Автоматические теги vs пользовательские
-    is_auto_generated = models.BooleanField(default=False, verbose_name="Автогенерируемый")
-    category = models.CharField(
-        max_length=50,
-        choices=[
-            ('technology', 'Технология'),
-            ('language', 'Язык программирования'),
-            ('framework', 'Фреймворк'),
-            ('topic', 'Тема'),
-            ('skill', 'Навык'),
-            ('other', 'Другое'),
-        ],
-        default='topic',
-        verbose_name="Категория тега"
-    )
-    
-    # Статистика использования
-    usage_count = models.IntegerField(default=0, verbose_name="Частота использования")
-    last_used = models.DateTimeField(auto_now=True, verbose_name="Последнее использование")
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        verbose_name = "Тег"
-        verbose_name_plural = "Теги"
-        ordering = ['-usage_count', 'name']
-        indexes = [
-            models.Index(fields=['slug']),
-            models.Index(fields=['category']),
-        ]
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+    updated_at = models.DateTimeField('Дата обновления', auto_now=True)
+    completed_at = models.DateTimeField('Дата завершения', null=True, blank=True)
 
-
-class ContentItemTag(models.Model):
-    """Промежуточная модель для связи контента и тегов с дополнительными данными"""
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    content_item = models.ForeignKey(
-        ContentItem, 
-        on_delete=models.CASCADE,
-        related_name='tag_relations'
-    )
-    tag = models.ForeignKey(
-        Tag, 
-        on_delete=models.CASCADE,
-        related_name='content_relations'
-    )
-    
-    # Вес тега для этого контента (от NLP анализа)
-    relevance_score = models.FloatField(
-        default=1.0,
-        verbose_name="Релевантность"
-    )
-    source = models.CharField(
-        max_length=20,
-        choices=[
-            ('auto', 'Автоматически'),
-            ('manual', 'Вручную'),
-            ('both', 'Авто + ручное'),
-        ],
-        default='auto',
-        verbose_name="Источник"
-    )
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        verbose_name = "Связь контент-тег"
-        verbose_name_plural = "Связи контент-тег"
-        unique_together = [['content_item', 'tag']]
-        indexes = [
-            models.Index(fields=['content_item', 'relevance_score']),
-        ]
-3.2.4 Категория пользователя (UserCategory)
-python
-class UserCategory(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='categories',
-        verbose_name="Пользователь"
-    )
-    name = models.CharField(max_length=200, verbose_name="Название")
-    description = models.TextField(blank=True, verbose_name="Описание")
-    
-    # Иерархическая структура
-    parent = models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='children',
-        verbose_name="Родительская категория"
-    )
-    
-    # Визуальные настройки
-    color = models.CharField(
-        max_length=7,
-        default='#3B82F6',
-        verbose_name="Цвет (HEX)"
-    )
-    icon = models.CharField(
-        max_length=50,
-        blank=True,
-        verbose_name="Иконка"
-    )
-    order = models.IntegerField(default=0, verbose_name="Порядок")
-    
-    # Статистика
-    content_count = models.IntegerField(default=0, verbose_name="Кол-во материалов")
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        verbose_name = "Категория пользователя"
-        verbose_name_plural = "Категории пользователей"
-        ordering = ['order', 'name']
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'name'],
-                name='unique_user_category_name'
-            )
-        ]
-3.2.5 Действие пользователя (UserAction)
-python
-class UserAction(models.Model):
-    ACTION_TYPES = [
-        ('view', 'Просмотр'),
-        ('save', 'Сохранение'),
-        ('start_reading', 'Начало чтения'),
-        ('complete', 'Завершение'),
-        ('rate', 'Оценка'),
-        ('comment', 'Комментарий'),
-        ('share', 'Поделиться'),
-        ('tag', 'Добавление тега'),
-    ]
-    
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='actions',
-        verbose_name="Пользователь"
-    )
-    content_item = models.ForeignKey(
-        ContentItem,
-        on_delete=models.CASCADE,
-        related_name='actions',
-        verbose_name="Контент"
-    )
-    
-    action_type = models.CharField(
-        max_length=50,
-        choices=ACTION_TYPES,
-        verbose_name="Тип действия"
-    )
-    
-    # Дополнительные данные в зависимости от типа
-    metadata = models.JSONField(
-        default=dict,
-        verbose_name="Метаданные действия"
-    )
-    """
-    Пример metadata:
-    - Для 'rate': {'rating': 4.5, 'max_rating': 5}
-    - Для 'view': {'duration_seconds': 120, 'scroll_depth': 0.75}
-    - Для 'comment': {'comment_id': 'uuid', 'text': '...'}
-    """
-    
-    # Временные метки
-    performed_at = models.DateTimeField(auto_now_add=True, verbose_name="Время действия")
-    expires_at = models.DateTimeField(
-        null=True,
-        blank=True,
-        verbose_name="Истекает"
-    )  # Для временных действий
-    
-    class Meta:
-        verbose_name = "Действие пользователя"
-        verbose_name_plural = "Действия пользователей"
-        ordering = ['-performed_at']
-        indexes = [
-            models.Index(fields=['user', 'action_type']),
-            models.Index(fields=['content_item', 'action_type']),
-            models.Index(fields=['performed_at']),
-        ]
-3.2.6 Рекомендация (Recommendation)
+3.2.3 Рекомендация (Recommendation)
 python
 class Recommendation(models.Model):
-    SOURCE_TYPES = [
-        ('content_based', 'На основе контента'),
-        ('collaborative', 'Коллаборативная'),
-        ('hybrid', 'Гибридная'),
-        ('trending', 'Популярное'),
-        ('serendipity', 'Неожиданное'),
-    ]
-    
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name='recommendations',
-        verbose_name="Пользователь"
-    )
-    content_item = models.ForeignKey(
-        ContentItem,
-        on_delete=models.CASCADE,
-        related_name='recommendations',
-        verbose_name="Рекомендуемый контент"
-    )
-    
-    # Алгоритмические данные
-    source_type = models.CharField(
-        max_length=50,
-        choices=SOURCE_TYPES,
-        verbose_name="Тип рекомендации"
-    )
-    score = models.FloatField(
-        verbose_name="Скор рекомендации",
-        help_text="От 0.0 до 1.0"
-    )
-    reason = models.JSONField(
-        default=dict,
-        verbose_name="Причина рекомендации"
-    )
-    """
-    Пример reason:
-    {
-        'matched_tags': ['python', 'django'],
-        'similar_users_count': 15,
-        'category_match': 'backend',
-        'explanation': 'На основе вашего интереса к Python'
-    }
-    """
-    
-    # Статус рекомендации
-    is_viewed = models.BooleanField(default=False, verbose_name="Просмотрено")
-    is_accepted = models.BooleanField(null=True, blank=True, verbose_name="Принято")
-    
-    # Временные метки
-    generated_at = models.DateTimeField(auto_now_add=True, verbose_name="Создано")
-    expires_at = models.DateTimeField(
-        verbose_name="Истекает",
-        help_text="Рекомендация актуальна 7 дней"
-    )
-    
-    class Meta:
-        verbose_name = "Рекомендация"
-        verbose_name_plural = "Рекомендации"
-        ordering = ['-score', '-generated_at']
-        indexes = [
-            models.Index(fields=['user', 'is_viewed']),
-            models.Index(fields=['user', 'score']),
-            models.Index(fields=['expires_at']),
-        ]
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'content_item'],
-                condition=models.Q(expires_at__gt=models.F('generated_at')),
-                name='unique_active_recommendation'
-            )
-        ]
-        4. Логика работы системы
-4.1 Основные бизнес-процессы
-4.1.1 Добавление нового контента
+    """Модель для хранения рекомендаций"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    content_item = models.ForeignKey(ContentItem, on_delete=models.CASCADE, verbose_name='Контент')
+    score = models.FloatField('Оценка релевантности', default=0.0)
+    reason = models.CharField('Причина рекомендации', max_length=200)
+    created_at = models.DateTimeField('Дата создания', auto_now_add=True)
+
+3.3 Структура проекта
 text
-1. Пользователь вводит URL
+projectforurfu/
+├── content/                    # Основное приложение
+│   ├── migrations/            # Миграции базы данных
+│   ├── management/commands/   # Кастомные команды Django
+│   ├── models.py              # Модели данных
+│   ├── views.py               # Контроллеры (views)
+│   ├── forms.py               # Формы Django
+│   ├── serializers.py         # Сериализаторы API
+│   ├── urls.py                # Маршруты приложения
+│   ├── admin.py               # Админ-панель
+│   ├── services.py            # Внешние сервисы и API
+│   ├── recommendation_engine.py # Движок рекомендаций
+│   └── visualizations.py      # Визуализация данных
+├── project/                   # Настройки проекта
+│   ├── settings.py           # Основные настройки
+│   ├── urls.py               # Главные маршруты
+│   └── wsgi.py               # WSGI конфигурация
+├── templates/                # HTML шаблоны
+│   ├── base.html             # Базовый шаблон
+│   └── content/              # Шаблоны приложения
+│       ├── home.html         # Главная страница
+│       ├── content_list.html # Список контента
+│       ├── content_detail.html # Детали контента
+│       └── statistics.html   # Статистика
+├── static/                   # Статические файлы
+├── .env                      # Переменные окружения
+├── requirements.txt          # Зависимости
+├── manage.py                 # Django CLI
+├── README.md                 # Документация
+└── TZ.md                     # Техническое задание
+
+4. Логика работы системы
+
+4.1 Основные бизнес-процессы
+
+4.1.1 Добавление нового контенту
+text
+1. Пользователь вводит URL или заполняет форму вручную
    ↓
-2. Валидация URL (формат, доступность, не дубликат)
+2. Если указан URL:
+   ├── 2.1. Отправка запроса к странице
+   ├── 2.2. Парсинг HTML с помощью BeautifulSoup
+   ├── 2.3. Извлечение:
+   │   ├── Заголовок (тег <title>)
+   │   ├── Описание (meta description)
+   │   ├── Ключевые слова (meta keywords)
+   │   └── Автоматическое определение типа контента
    ↓
-3. Создание асинхронной задачи Celery на парсинг
+3. Сохранение контента в базу данных
    ↓
-4. Парсинг (синхронный или асинхронный):
-   ├── 4.1. Извлечение Open Graph метаданных
-   ├── 4.2. Заголовок из <title> или h1
-   ├── 4.3. Описание из meta description или первых абзацев
-   ├── 4.4. Превью-изображение
-   ├── 4.5. Определение типа контента по домену/структуре
+4. Добавление тегов (автоматически из ключевых слов или вручную)
    ↓
-5. NLP обработка (если включено):
-   ├── 5.1. Извлечение текста (удаление HTML, JS, CSS)
-   ├── 5.2. Определение языка
-   ├── 5.3. Извлечение сущностей (NER)
-   ├── 5.4. Автоматическая тегизация
-   ├── 5.5. Определение тональности и сложности
-   ↓
-6. Сохранение в базу со статусом "new"
-   ↓
-7. Предпросмотр пользователю с возможностью редактирования
-   ↓
-8. Подтверждение и окончательное сохранение
+5. Обновление системы рекомендаций для пользователя
+
 4.1.2 Генерация рекомендаций
 text
-1. Триггер генерации:
-   ├── Добавление нового контента
-   ├── Действие пользователя (просмотр/завершение)
-   ├── По расписанию (ежедневно)
+1. Сбор данных о пользователе:
+   ├── Теги из сохраненного контента
+   ├── Предпочтительные типы контента
+   ├── Активность (последние добавления)
    ↓
-2. Сбор данных для пользователя:
-   ├── История действий (последние 90 дней)
-   ├── Текущие теги и категории
-   ├── Похожие пользователи (коллаборативная фильтрация)
+2. Поиск похожего контента:
+   ├── По общим тегам с другими пользователями
+   ├── В тех же категориях
+   ├── Такого же типа
    ↓
-3. Алгоритм рекомендаций:
-   ├── Этап 1: Контентная фильтрация (70% веса)
-   │   ├── Поиск по совпадающим тегам
-   │   ├── Контент из любимых категорий
-   │   ├── Контент похожей сложности
-   │
-   ├── Этап 2: Коллаборативная фильтрация (20% веса)
-   │   ├── Находка k ближайших пользователей
-   │   ├── Анализ их предпочтений
-   │   ├── Контент, который им понравился
-   │
-   ├── Этап 3: Разнообразие (10% веса)
-   │   ├── Новые темы для пользователя
-   │   ├── Контент из смежных областей
-   │   ├── "Неожиданные" рекомендации
+3. Расчет релевантности:
+   ├── Вес совпадающих тегов
+   ├── Свежесть контента
+   ├── Популярность среди других пользователей
    ↓
-4. Ранжирование и фильтрация:
-   ├── Исключение уже просмотренного
-   ├── Учет языковых предпочтений
-   ├── Фильтр по качеству (is_parsed=True)
+4. Формирование списка рекомендаций
    ↓
-5. Сохранение рекомендаций в базу
-   ↓
-6. Отображение на главной/в разделе рекомендаций
-4.1.3 NLP обработка текста
-python
-class ContentAnalyzer:
-    """Основной класс для NLP анализа контента"""
-    
-    def __init__(self, language='ru'):
-        self.language = language
-        self.nlp = spacy.load(f"{language}_core_news_sm")
-        self.stop_words = set(stopwords.words(language))
-        
-    def analyze(self, text: str, url: str = None) -> Dict:
-        """Полный анализ текста"""
-        doc = self.nlp(text[:100000])  # Ограничение длины
-        
-        return {
-            'language': self.detect_language(text),
-            'entities': self.extract_entities(doc),
-            'keywords': self.extract_keywords(text),
-            'tags': self.generate_tags(doc, url),
-            'sentiment': self.analyze_sentiment(text),
-            'complexity': self.estimate_complexity(text),
-            'read_time_minutes': self.estimate_read_time(text),
-            'summary': self.generate_summary(text),
-        }
-    
-    def extract_entities(self, doc) -> List[Dict]:
-        """Извлечение именованных сущностей"""
-        entities = []
-        for ent in doc.ents:
-            if ent.label_ in ['ORG', 'PRODUCT', 'TECH', 'LANG']:
-                entities.append({
-                    'text': ent.text,
-                    'label': ent.label_,
-                    'start': ent.start_char,
-                    'end': ent.end_char,
-                })
-        return entities
-    
-    def generate_tags(self, doc, url=None) -> List[Dict]:
-        """Генерация тегов на основе контента"""
-        tags = []
-        
-        # 1. Из сущностей
-        tags.extend([e['text'].lower() for e in self.extract_entities(doc)])
-        
-        # 2. Из ключевых слов (TF-IDF)
-        tags.extend(self.extract_keywords(doc.text))
-        
-        # 3. Из домена (если есть)
-        if url:
-            domain = urlparse(url).netloc
-            if 'github' in domain:
-                tags.append('github')
-            elif 'medium' in domain:
-                tags.append('medium')
-            # и т.д.
-        
-        # 4. Дедупликация и ранжирование
-        tag_counts = Counter(tags)
-        return [
-            {'tag': tag, 'score': count/len(tags)}
-            for tag, count in tag_counts.most_common(10)
-        ]
+5. Отображение на главной странице
+
 4.2 API Endpoints
-4.2.1 Аутентификация
-http
-POST   /api/v1/auth/register/
-POST   /api/v1/auth/login/
-POST   /api/v1/auth/logout/
-POST   /api/v1/auth/refresh/
-GET    /api/v1/auth/profile/
-PUT    /api/v1/auth/profile/
-4.2.2 Контент
-http
-GET    /api/v1/content/                    # Список с фильтрами
-POST   /api/v1/content/                    # Добавление
-GET    /api/v1/content/{id}/               # Детали
-PUT    /api/v1/content/{id}/               # Обновление
-DELETE /api/v1/content/{id}/               # Удаление
-POST   /api/v1/content/{id}/parse/         # Принудительный парсинг
-POST   /api/v1/content/{id}/analyze/       # NLP анализ
-POST   /api/v1/content/batch/              # Пакетное добавление
-GET    /api/v1/content/stats/              # Статистика
-4.2.3 Рекомендации
-http
-GET    /api/v1/recommendations/            # Актуальные рекомендации
-POST   /api/v1/recommendations/generate/   # Принудительная генерация
-PUT    /api/v1/recommendations/{id}/       # Отметка как просмотренное
-GET    /api/v1/recommendations/history/    # История рекомендаций
-4.2.4 Аналитика
-http
-GET    /api/v1/analytics/interests/        # График интересов
-GET    /api/v1/analytics/timeline/         # Таймлайн активности
-GET    /api/v1/analytics/productivity/     # Продуктивность
-GET    /api/v1/analytics/export/           # Экспорт данных
-4.3 Алгоритмы и формулы
-4.3.1 Расчет релевантности тега
+
+4.2.1 Веб-интерфейс
 text
-relevance_score(tag, content) = 
-  0.4 * tfidf(tag, content) +
-  0.3 * entity_weight(tag) +
-  0.2 * domain_relevance(tag, url) +
-  0.1 * popularity(tag)
-4.3.2 Сходство пользователей (для коллаборативной фильтрации)
+GET    /                      # Главная страница
+GET    /content/              # Список всего контента
+GET    /content/<id>/         # Детали контента
+GET    /content/add/          # Форма добавления
+POST   /content/add/          # Добавление контента
+GET    /category/<slug>/      # Контент по категории
+GET    /tag/<slug>/           # Контент по тегу
+GET    /statistics/           # Статистика
+
+4.2.2 REST API
 text
-similarity(user_a, user_b) = 
-  cosine_similarity(
-    vectorize(user_a.actions),
-    vectorize(user_b.actions)
-  )
-  
-vectorize(actions) = [
-  count_tags_used * tag_weights,
-  categories_preferences,
-  content_types_distribution,
-  ...
-]
-4.3.3 Оценка сложности текста
-text
-complexity_score(text) = 
-  0.3 * avg_sentence_length +
-  0.3 * avg_word_length +
-  0.2 * unique_words_ratio +
-  0.1 * technical_terms_count +
-  0.1 * passive_voice_ratio
+GET    /api/                  # Корень API
+GET    /api/contents/         # Список контента
+POST   /api/contents/         # Добавление контента
+GET    /api/contents/<id>/    # Детали контента
+GET    /api/categories/       # Список категорий
+GET    /api/recommendations/for_me/ # Персональные рекомендации
+POST   /api/parse/            # Парсинг URL
+GET    /api/visualizations/   # Данные для графиков
+GET    /api/analytics/        # Аналитика
+
+4.3 Алгоритмы
+
+4.3.1 Расчет рекомендаций
+python
+def calculate_recommendation_score(user, content_item):
+    """Расчет релевантности контента для пользователя"""
+    
+    # 1. Совпадение тегов (40% веса)
+    user_tags = get_user_tags(user)
+    content_tags = content_item.tags.all()
+    common_tags = set(user_tags) & set(content_tags)
+    tag_score = len(common_tags) / max(len(user_tags), 1) * 0.4
+    
+    # 2. Предпочтения по типу (30% веса)
+    user_preferred_types = get_user_content_types(user)
+    type_score = 0.3 if content_item.content_type in user_preferred_types else 0
+    
+    # 3. Свежесть контента (20% веса)
+    days_old = (timezone.now() - content_item.created_at).days
+    recency_score = max(0, 1 - days_old / 90) * 0.2
+    
+    # 4. Популярность (10% веса)
+    similar_content_count = ContentItem.objects.filter(
+        tags__in=content_item.tags.all()
+    ).count()
+    popularity_score = min(similar_content_count / 10, 1) * 0.1
+    
+    return tag_score + type_score + recency_score + popularity_score
+
+4.3.2 Анализ данных
+python
+def analyze_content_data():
+    """Анализ данных контента с помощью pandas"""
+    
+    # Загрузка данных в DataFrame
+    data = ContentItem.objects.all().values()
+    df = pd.DataFrame(data)
+    
+    # Анализ распределения
+    analysis = {
+        'total_items': len(df),
+        'by_type': df['content_type'].value_counts().to_dict(),
+        'by_status': df['status'].value_counts().to_dict(),
+        'monthly_growth': df.groupby(
+            pd.Grouper(key='created_at', freq='M')
+        ).size().to_dict(),
+        'avg_tags_per_item': calculate_avg_tags(df)
+    }
+    
+    return analysis
+
+
 5. Этапы разработки
-Этап 1: Базовый каркас (Неделя 1-2)
-Настройка Django проекта и окружения
 
-Модели CustomUser, ContentItem, Tag
+Этап 1: Базовый каркас (День 1-2)
+Настройка Django проекта
+Создание базовых моделей (Category, ContentItem)
+Настройка админ-панели
+Базовая миграция базы данных
 
-Базовая аутентификация (Django Allauth)
+Этап 2: Веб-интерфейс (День 3-4)
+Создание шаблонов с Bootstrap
+Реализация views для отображения контента
+Добавление системы фильтрации и поиска
+Формы для добавления/редактирования контента
 
-CRUD операции для контента
+Этап 3: Расширенный функционал (День 5-6)
+Интеграция django-taggit для тегов
+Реализация системы рекомендаций
+Создание REST API с Django REST Framework
+Интеграция внешних API (парсинг URL)
 
-Простой парсинг метаданных
-
-Этап 2: Интеллектуальная обработка (Неделя 3-4)
-Интеграция SpaCy для NLP
-
-Автоматическая тегизация
-
-Определение языка и сущностей
-
-Система рекомендаций (базовая)
-
-Интерфейс пользователя
-
-Этап 3: Расширенные функции (Неделя 5)
-Категории пользователя (иерархические)
-
-Подписки и социальные функции
-
-Аналитика и визуализация
-
-Экспорт данных
-
+Этап 4: Аналитика и визуализация (День 7-8)
+Реализация анализа данных с pandas
+Создание графиков с Plotly
+Страница статистики
 Оптимизация производительности
 
-Этап 4: Тестирование и деплой (Неделя 6)
-Написание тестов (unit, integration)
+Этап 5: Деплой и тестирование (День 9-10)
+Настройка для продакшена
+Деплой на PythonAnywhere
+Создание тестовых данных
+Написание документации
 
-Настройка CI/CD (GitHub Actions)
-
-Оптимизация запросов и индексов
-
-Production настройки
-
-Документация
 
 6. Критерии приемки
+
 6.1 Функциональные критерии
-Все модели реализованы согласно спецификации
 
-CRUD операции работают корректно для всех сущностей
-
-Парсинг извлекает метаданные для 95% ссылок
-
-NLP анализ определяет теги с точностью ≥ 85%
-
-Рекомендации генерируются за < 500 мс
-
-Интерфейс адаптирован под мобильные устройства
+Все модели реализованы и работают
+CRUD операции для контента функционируют
+Система рекомендаций выдает релевантные результаты
+Парсинг URL извлекает основные метаданные
+Фильтрация и поиск работают корректно
+API возвращает данные в правильном формате
 
 6.2 Технические критерии
-Время отклика API < 200 мс (p95)
+Проект запускается по инструкции из README.md
+Код соответствует PEP8 стандартам
+Настройки безопасности применены (DEBUG=False в продакшене)
+Статические файлы загружаются корректно
+База данных содержит тестовые данные (10-15 записей)
 
-80% покрытие тестами критического функционала
+6.3 Интерфейсные критерии
+Адаптивный дизайн на Bootstrap 5
+Удобная навигация между страницами
+Интуитивно понятные формы
+Корректное отображение на мобильных устройствах
 
-Код соответствует PEP8 и проходит линтеры
+7. Документация
 
-Наличие документации API (OpenAPI/Swagger)
+7.1 Файлы документации
+README.md - Основная документация проекта
+TZ.md - Техническое задание
+requirements.txt - Список зависимостей
+.env.example - Пример файла окружения
 
-Рабочий деплой на сервере (Docker)
 
-Миграции базы данных обратно совместимы
+7.2 Инструкция по запуску
+bash
+# 1. Клонирование репозитория
+git clone <repository-url>
+cd projectforurfu
+
+# 2. Создание виртуального окружения
+python -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# или
+.venv\Scripts\activate     # Windows
+
+# 3. Установка зависимостей
+pip install -r requirements.txt
+
+# 4. Настройка окружения
+cp .env.example .env
+# Отредактировать .env файл
+
+# 5. Настройка базы данных
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py seed_data
+
+# 6. Запуск сервера
+python manage.py runserver
+
+7.3 Демо-доступ
+Сайт: http://Egor06.pythonanywhere.com/
+
+Админка: http://Egor06.pythonanywhere.com/admin/
+
+API: http://Egor06.pythonanywhere.com/api/
